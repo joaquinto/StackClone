@@ -22,6 +22,7 @@ before_script:
   - ./cc-test-reporter before-build
   - sleep 15
   - mongo mydb_test --eval 'db.createUser({user:"stackoverflow",pwd:"stackoverflow",roles:["readWrite"]});'
+  - npm run refresh
 
 script:
  - npm run coveralls
