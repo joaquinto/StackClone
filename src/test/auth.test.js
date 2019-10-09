@@ -12,6 +12,15 @@ const url = '/api/v1/auth';
 
 describe('USER SIGNUP', () => {
   let request;
+  before(async () => {
+    const res = await chai.request(app)
+      .post(`${url}/signup`)
+      .send({
+        displayName: 'johnwheal1',
+        email: 'johnwheal1@gmail.com',
+        password: 'johnwheal1',
+      });
+  })
   beforeEach(async () => {
     request = await chai.request(app);
   });
@@ -30,9 +39,9 @@ describe('USER SIGNUP', () => {
     const res = await request
       .post(`${url}/signup`)
       .send({
-        displayName: 'johnwheal',
-        email: 'johnwheal@gmail.com',
-        password: 'johnwheal',
+        displayName: 'johnwheal1',
+        email: 'johnwheal1@gmail.com',
+        password: 'johnwheal1',
       });
     res.body.should.have.property('message').equal('User already exist');
     res.body.should.have.property('data');
