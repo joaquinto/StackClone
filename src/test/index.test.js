@@ -15,8 +15,8 @@ describe('FIRST TEST', () => {
 
   it('should return status 404', async () => {
     const res = await chai.request(app).get('/hello');
-    res.body.should.have.property('error');
-    res.body.error.message.should.equal('Resource does not exist');
-    res.body.error.error.status.should.equal(404);
+    res.body.should.have.property('success').equal(false);
+    res.body.should.have.property('message').equal('Page not found');
+    res.body.should.have.property('status').equal(404);
   });
 });

@@ -4,10 +4,14 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "build": "rimraf ./dist/ && babel src --out-dir dist",
+    "start": "pm2 start",
     "start:dev": "nodemon --exec babel-node ./src/index.js",
+    "refresh": "babel-node ./src/database/migration/refreshDatabase refreshDatabase",
     "test": "NODE_ENV=test nyc mocha --timeout 1000 -r @babel/register src/test/*.test.js --exit",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
-    "coveralls": "nyc --reporter=lcov --reporter=text-lcov npm test"
+    "coveralls": "nyc --reporter=lcov --reporter=text-lcov npm test",
+    "heroku-postbuild": "npm run build && npm run refresh && npm run start"
   },
   "repository": {
     "type": "git",
@@ -21,24 +25,33 @@
   },
   "homepage": "https://github.com/joaquinto/StackClone#readme",
   "dependencies": {
-    "@hapi/joi": "^16.1.4",
+    "@babel/polyfill": "^7.4.4",
+    "@babel/runtime": "^7.6.3",
+    "@hapi/joi": "^15.1.1",
+    "bcrypt": "^3.0.6",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
-    "express": "^4.17.1",
     "dotenv": "^8.1.0",
+    "express": "^4.17.1",
+    "faker": "^4.1.0",
     "fancy-log": "^1.3.3",
     "helmet": "^3.21.1",
     "jsonwebtoken": "^8.5.1",
+    "lodash": "^4.17.15",
+    "make-runnable": "^1.3.6",
     "mongoose": "^5.7.3",
     "morgan": "^1.9.1",
-    "redis": "^2.8.0"
+    "pm2": "^3.5.1",
+    "redis": "^2.8.0",
+    "socket.io": "^2.2.0",
+    "swagger-jsdoc": "^3.4.0",
+    "swagger-ui-express": "^4.1.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.4.4",
     "@babel/core": "^7.4.4",
     "@babel/node": "^7.2.2",
     "@babel/plugin-transform-runtime": "^7.4.4",
-    "@babel/polyfill": "^7.4.4",
     "@babel/preset-env": "^7.4.4",
     "babel-preset-airbnb": "^3.2.1",
     "chai": "^4.2.0",

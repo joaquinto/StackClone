@@ -1,0 +1,87 @@
+import _ from 'lodash';
+import Question from '../models/questions';
+import { findAllAnswers } from './answerServices';
+import client from '../helpers/redis';
+
+export const findAllQuestions = async () => {
+  try {
+    const questions = await Question.find({}, '_id title tags details').populate('answers', 'questionId body userId').exec();
+    return questions;
+  } catch (error) {
+    return new Error(error);
+  }
+};
+
+export const findQuestionById = async (id) => {
+  try {
+    const question = await Question.findOne({ _id: id });
+    return question;
+  } catch (error) {
+    return new Error(error);
+  }
+};
+
+export const createQuestion = async (newQuestion) => {
+  try {
+    let question = await Question.create(newQuestion);
+    question = question.toObject();
+    client.lpush('questions', JSON.stringify(_.omit(question, 'answers', '__v')));
+    return question;
+  } catch (error) {
+    return new Error(error);
+  }
+};
+
+export const upVoteQuestion = async (id) => {
+  try {
+    const question = await Question
+      .findOneAndUpdate({ _id: id }, { $inc: { votes: 1 } }, { new: true });
+    return question;
+  } catch (error) {
+    return new Error(error);
+  }
+};
+
+export const downVoteQuestion = async (id) => {
+  try {
+    const question = await Question.findOneAndUpdate({ _id: id }, { $inc: { votes: -1 } }, { new: true });
+    return question;
+  } catch (error) {
+    return new Error(error);
+  }
+};
+
+export const addQuestionAnswer = async (questionId, payload) => {
+  try {
+    const question = await Question.findOne({ _id: questionId });
+    question.answers.addToSet(payload);
+    question.save();
+    return question;
+  } catch (error) {
+    return new Error(error);
+  }
+};
+
+export const queryAllQuestions = async (query) => {
+  try {
+    const queryArray = query.split(' ');
+    const questionResponse = [];
+    const questions = await findAllQuestions();
+    const answers = await findAllAnswers();
+
+    queryArray.forEach((queryItem) => {
+      if (queryItem.length) {
+        questions.filter(({ title }) => title.toLowerCase()
+          .match(queryItem.toLowerCase())).map(item => questionResponse.push(item));
+
+        answers.filter(({ body }) => body.toLowerCase()
+          .match(queryItem.toLowerCase())).map(item => questionResponse.push(item));
+      }
+    });
+
+    const queryPool = [...new Set(questionResponse)];
+    return queryPool;
+  } catch (error) {
+    return new Error(error);
+  }
+};
