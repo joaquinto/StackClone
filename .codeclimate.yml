@@ -30,6 +30,6 @@ exclude_patterns:
   - node_modules/
   - src/test/
   - scr/database/
-  - server/docs
+  - src/docs/
   - src/index.js
   - dist/
