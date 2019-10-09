@@ -28,8 +28,8 @@ checks:
       threshold: 4
 exclude_patterns:
   - node_modules/
-  - server/test/
-  - server/db/
-  - server/middleware/validator.js
-  - server/index.js
+  - src/test/
+  - scr/database/
+  - server/docs
+  - src/index.js
   - dist/
