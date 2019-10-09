@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "rimraf ./dist/ && babel src --out-dir dist",
-    "start": "pm2 start",
+    "start": "node ./dist/index.js",
     "start:dev": "nodemon --exec babel-node ./src/index.js",
     "refresh": "babel-node ./src/database/migration/refreshDatabase refreshDatabase",
     "test": "NODE_ENV=test nyc mocha --timeout 1000 -r @babel/register src/test/*.test.js --exit",
