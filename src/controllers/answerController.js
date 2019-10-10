@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 import { createAnswer } from '../services/answerServices';
 import { respondWithSuccess, respondWithWarning } from '../helpers/responseHandler';
 import { addUserAnswer, sendAuthorNotification } from '../services/userServices';
@@ -8,7 +9,7 @@ const postAnswer = async (req, res) => {
     const answer = await createAnswer({
       question: req.params.questionId,
       ...req.body,
-      user: req.auth.id
+      user: req.auth.id,
     });
     await addUserAnswer(req.auth.id, answer._id);
     const question = await addQuestionAnswer(req.params.questionId, answer._id);

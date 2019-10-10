@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import Question from '../models/questions';
 import { findAllAnswers } from './answerServices';
+import filterQuery from '../helpers/filterQuery';
 import client from '../helpers/redis';
 
 export const findAllQuestions = async () => {
@@ -44,7 +45,8 @@ export const upVoteQuestion = async (id) => {
 
 export const downVoteQuestion = async (id) => {
   try {
-    const question = await Question.findOneAndUpdate({ _id: id }, { $inc: { votes: -1 } }, { new: true });
+    const question = await Question
+      .findOneAndUpdate({ _id: id }, { $inc: { votes: -1 } }, { new: true });
     return question;
   } catch (error) {
     return new Error(error);
@@ -65,21 +67,9 @@ export const addQuestionAnswer = async (questionId, payload) => {
 export const queryAllQuestions = async (query) => {
   try {
     const queryArray = query.split(' ');
-    const questionResponse = [];
     const questions = await findAllQuestions();
     const answers = await findAllAnswers();
-
-    queryArray.forEach((queryItem) => {
-      if (queryItem.length) {
-        questions.filter(({ title }) => title.toLowerCase()
-          .match(queryItem.toLowerCase())).map(item => questionResponse.push(item));
-
-        answers.filter(({ body }) => body.toLowerCase()
-          .match(queryItem.toLowerCase())).map(item => questionResponse.push(item));
-      }
-    });
-
-    const queryPool = [...new Set(questionResponse)];
+    const queryPool = [...filterQuery(queryArray, questions, 'title'), ...filterQuery(queryArray, answers, 'body')];
     return queryPool;
   } catch (error) {
     return new Error(error);

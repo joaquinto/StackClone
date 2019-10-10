@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 import { findQuestion } from '../services/questionServices';
 import client from '../helpers/redis';
 import { respondWithWarning } from '../helpers/responseHandler';

@@ -1,10 +1,11 @@
-import _ from 'lodash';
+/* eslint-disable no-underscore-dangle */
 import {
   findAllQuestions, upVoteQuestion, createQuestion, downVoteQuestion, queryAllQuestions,
 } from '../services/questionServices';
 import { addUserQuestion } from '../services/userServices';
 import { respondWithWarning, respondWithSuccess } from '../helpers/responseHandler';
 import client from '../helpers/redis';
+import { pushObjectToRedis, returnData } from '../helpers/objectHelper';
 
 export const postQuestion = async (req, res) => {
   try {
@@ -17,20 +18,16 @@ export const postQuestion = async (req, res) => {
 };
 
 export const getQuestions = async (req, res) => {
+  let questions;
   client.lrange('questions', 0, -1, async (error, data) => {
-    const questions = [];
     if (error || data.length < 1) {
       const refreshedQuestion = await findAllQuestions();
-      refreshedQuestion.forEach((question) => {
-        const modifiedQuestion = _.omit(question.toObject(), 'answers', '__v');
-        questions.push(modifiedQuestion);
-        client.lpush('questions', JSON.stringify(modifiedQuestion));
-      });
+      const dataValue = ['answers', '__v'];
+      const key = 'questions';
+      questions = pushObjectToRedis(refreshedQuestion, dataValue, key);
       return !questions.length ? respondWithWarning(res, 404, 'Questions not found') : respondWithSuccess(res, 200, 'Questions retrived successfully', questions);
     }
-    data.forEach((question) => {
-      questions.push(JSON.parse(question));
-    });
+    questions = returnData(data);
     return !questions.length ? respondWithWarning(res, 404, 'Questions not found') : respondWithSuccess(res, 200, 'Questions retrived successfully', questions);
   });
 };

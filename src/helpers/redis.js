@@ -1,6 +1,6 @@
 import redis from 'redis';
 import log from 'fancy-log';
-import constants from '../config/constants'
+import constants from '../config/constants';
 
 const client = redis.createClient(constants.REDIS_URL);
 

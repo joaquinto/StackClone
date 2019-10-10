@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import User from '../models/user';
 import { eventEmitter } from '../helpers/notificationHandler';
+import filterQuery from '../helpers/filterQuery';
 import client from '../helpers/redis';
 
 export const findAllUsers = async () => {
@@ -75,17 +76,10 @@ export const sendAuthorNotification = async (authorId, title, questionId) => {
 export const queryAllUsers = async (query) => {
   try {
     const queryArray = query.split(' ');
-    const userResponse = [];
     const users = await User.find({}, '_id displayName email');
+    const queryLocator = 'displayName';
 
-    queryArray.forEach((queryItem) => {
-      if (queryItem.length) {
-        users.filter(({ displayName }) => displayName.toLowerCase()
-          .match(queryItem.toLowerCase())).map(item => userResponse.push(item));
-      }
-    });
-
-    const queryPool = [...new Set(userResponse)];
+    const queryPool = [...new Set(filterQuery(queryArray, users, queryLocator))];
     return queryPool;
   } catch (error) {
     return new Error(error);

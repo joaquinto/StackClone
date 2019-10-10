@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 import _ from 'lodash';
 import client from '../helpers/redis';
 import { createUser } from '../services/userServices';
