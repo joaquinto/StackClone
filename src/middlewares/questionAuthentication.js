@@ -1,10 +1,10 @@
-import { findQuestionById } from '../services/questionServices';
+import { findQuestion } from '../services/questionServices';
 import client from '../helpers/redis';
 import { respondWithWarning } from '../helpers/responseHandler';
 
 const validQuestion = async (req, res, next) => {
   try {
-    const question = await findQuestionById(req.params.questionId);
+    const question = await findQuestion({ _id: req.params.questionId });
     if (!question || !question.tags) {
       return respondWithWarning(res, 404, 'Question not found');
     }

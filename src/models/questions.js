@@ -1,5 +1,7 @@
 import mongoose from 'mongoose';
 
+import { enumTags } from '../helpers/validationRules';
+
 const { Schema } = mongoose;
 
 const questionSchema = new Schema({
@@ -13,7 +15,7 @@ const questionSchema = new Schema({
   },
   tags: {
     type: [String],
-    enum: ['javascript', 'java', 'c#', 'php', 'python', 'android', 'jquery', 'html', 'c++', 'ios', 'css', 'mysql', 'sql', 'asp.net', 'c', 'ruby-on-rails', 'r', 'arrays', 'node.js', 'objective-c', '.net', 'json', 'sql-server', 'angularjs', 'swift', 'iphone', 'regex', 'django', 'ruby', 'excel', 'ajax', 'xml', 'python-3.x', 'angular', 'asp.net-mvc', 'linux', 'reactjs', 'database', 'spring', 'wordpress', 'vba', 'wpf', 'string', 'xcode', 'windows', 'laravel', 'vb.net', 'pandas', 'html5', 'mongodb', 'multithreading', 'eclipse', 'bash', 'git', 'oracle', 'postgresql', 'forms', 'twitter-bootstrap', 'image', 'macos', 'algorithm', 'typescript', 'scala', 'python-2.7', 'list', 'visual-studio', 'winforms', 'apache', 'matlab', 'performance', 'facebook', 'amazon-web-services', 'excel-vba', 'entity-framework', 'hibernate', 'css3', 'sqlite', 'firebase', 'function', 'azure', 'linq', 'swing', 'rest', 'powershell', 'shell', 'qt', 'api', 'maven', 'spring-boot', '.htaccess', 'selenium', 'file', 'loops', 'unit-testing', 'numpy', 'codeigniter', 'csv', 'docker', 'symfony', 'perl'],
+    enum: enumTags,
   },
   votes: {
     type: Number,

@@ -9,9 +9,9 @@ export const findUsers = async (req, res) => {
     if (error || users.length < 1) {
       const refreshedUsers = await findAllUsers();
       refreshedUsers.forEach((user) => {
-        const modifiedUser = user.toObject();
-        allUsers.push(_.omit(modifiedUser, 'password', '__v', 'subscription', 'questions', 'answers'));
-        client.lpush('users', JSON.stringify(_.omit(modifiedUser, 'password', '__v', 'subscription', 'questions', 'answers')));
+        const modifiedUser = _.omit(user.toObject(), 'password', '__v', 'subscription', 'questions', 'answers');
+        allUsers.push(modifiedUser);
+        client.lpush('users', JSON.stringify(modifiedUser));
       });
       return respondWithSuccess(res, 200, 'Users retrieved successfully', allUsers);
     }

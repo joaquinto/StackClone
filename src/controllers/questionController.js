@@ -22,9 +22,9 @@ export const getQuestions = async (req, res) => {
     if (error || data.length < 1) {
       const refreshedQuestion = await findAllQuestions();
       refreshedQuestion.forEach((question) => {
-        const modifiedQuestion = question.toObject();
-        questions.push(_.omit(modifiedQuestion, 'answers', '__v'));
-        client.lpush('questions', JSON.stringify(_.omit(modifiedQuestion, 'answers', '__v')));
+        const modifiedQuestion = _.omit(question.toObject(), 'answers', '__v');
+        questions.push(modifiedQuestion);
+        client.lpush('questions', JSON.stringify(modifiedQuestion));
       });
       return !questions.length ? respondWithWarning(res, 404, 'Questions not found') : respondWithSuccess(res, 200, 'Questions retrived successfully', questions);
     }

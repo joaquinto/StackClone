@@ -34,7 +34,7 @@ export const createUser = async (newUser) => {
 
 export const addUserQuestion = async (userId, payload) => {
   try {
-    const user = await User.findOne({ _id: userId });
+    const user = await findUser({ _id: userId });
     user.questions.addToSet(payload);
     user.save();
     return user;
@@ -45,7 +45,7 @@ export const addUserQuestion = async (userId, payload) => {
 
 export const addUserAnswer = async (userId, payload) => {
   try {
-    const user = await User.findOne({ _id: userId });
+    const user = await findUser({ _id: userId });
     user.answers.addToSet(payload);
     user.save();
     return user;
@@ -94,7 +94,7 @@ export const queryAllUsers = async (query) => {
 
 export const subscribeToQuestions = async (userId) => {
   try {
-    const user = await User.findOne({ _id: userId });
+    const user = await findUser({ _id: userId });
     user.set({ subscription: !user.subscription });
     user.save();
     return user;

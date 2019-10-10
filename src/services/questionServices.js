@@ -12,9 +12,9 @@ export const findAllQuestions = async () => {
   }
 };
 
-export const findQuestionById = async (id) => {
+export const findQuestion = async (payload) => {
   try {
-    const question = await Question.findOne({ _id: id });
+    const question = await Question.findOne(payload);
     return question;
   } catch (error) {
     return new Error(error);
@@ -53,7 +53,7 @@ export const downVoteQuestion = async (id) => {
 
 export const addQuestionAnswer = async (questionId, payload) => {
   try {
-    const question = await Question.findOne({ _id: questionId });
+    const question = await findQuestion({ _id: questionId });
     question.answers.addToSet(payload);
     question.save();
     return question;
