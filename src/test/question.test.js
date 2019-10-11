@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 import app from '../app';
@@ -10,6 +11,7 @@ chai.should();
 chai.use(chaiHttp);
 
 const url = '/api/v1/questions';
+// const expiredToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJrZXkiOnsiaWQiOiI1ZDlmYTcxNGRlNGY2NTJiYjNhNzBmMTYifSwiaWF0IjoxNTcwNzQ0MDg0LCJleHAiOjE1NzA4MzA0ODR9.z3Vo5L12Cu1pTyy-yGXZyMOLsvgBYvnAeukjau3sxos';
 
 describe('POST QUESTION', () => {
   let request;
@@ -39,6 +41,17 @@ describe('POST QUESTION', () => {
     res.body.should.have.property('data');
     res.body.should.have.property('success').equal(true);
   });
+
+  // it('should return question object', async () => {
+  //   const res = await request
+  //     .post(`${url}`)
+  //     .set('Authorization', expiredToken)
+  //     .send(questionData.question);
+  //   res.body.should.have.property('message').equal('Session has expired. Signin to continue');
+  //   res.body.should.have.property('status').equal(401);
+  //   res.body.should.have.property('data');
+  //   res.body.should.have.property('success').equal(false);
+  // });
 
   it('should return an error for missing title', async () => {
     const res = await request
@@ -409,6 +422,18 @@ describe('POST Answer', () => {
     res.body.should.have.property('success').equal(false);
   });
 
+  it('should return an error for least body one', async () => {
+    const res = await request
+      .post(`${url}/${questionId}/answers`)
+      .set('Authorization', `Bearer ${userToken}`)
+      .send(answerData.answerWithLeastBody);
+    res.body.should.have.property('message').equal('Bad request');
+    res.body.should.have.property('status').equal(400);
+    res.body.should.have.property('data');
+    res.body.data[0].should.equal('body length must be at least 3 characters long');
+    res.body.should.have.property('success').equal(false);
+  });
+
   it('should return an error for least body', async () => {
     const res = await request
       .post(`${url}/${questionId}/answers`)
@@ -419,5 +444,21 @@ describe('POST Answer', () => {
     res.body.should.have.property('data');
     res.body.data[0].should.equal('body length must be at least 3 characters long');
     res.body.should.have.property('success').equal(false);
+  });
+});
+
+describe('Get ANSWERS', () => {
+  let request;
+  beforeEach(async () => {
+    request = await chai.request(app);
+  });
+
+  it('should return question object', async () => {
+    const res = await request
+      .get('/api/v1/answers');
+    res.body.should.have.property('message').equal('Answers retrived successfully');
+    res.body.should.have.property('status').equal(200);
+    res.body.should.have.property('data');
+    res.body.should.have.property('success').equal(true);
   });
 });

@@ -1,6 +1,8 @@
+/* eslint-disable no-underscore-dangle */
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 import app from '../app';
+import answerData from './testData/answerData';
 
 app.listen(3002);
 
@@ -8,6 +10,7 @@ chai.should();
 chai.use(chaiHttp);
 
 const url = '/api/v1/users';
+const url1 = '/api/v1/questions';
 
 describe('GET ALL USERS', () => {
   let request;
@@ -120,5 +123,69 @@ describe('SEARCH USER', () => {
     res.body.should.have.property('data');
     res.body.should.have.property('success').equal(false);
     res.body.should.have.property('status').equal(404);
+  });
+});
+
+describe('POST Answer', () => {
+  let request;
+  let userToken;
+  let questionId;
+
+  beforeEach(async () => {
+    request = await chai.request(app);
+
+    const res = await chai.request(app).post('/api/v1/auth/signin').send({ email: 'johnwheal@gmail.com', password: 'johnwheal' });
+    userToken = res.body.data.token;
+
+    const resq = await chai.request(app).get(`${url1}`);
+    questionId = resq.body.data[0]._id;
+  });
+
+  it('should return answer object', async () => {
+    const res = await request
+      .post(`${url1}/${questionId}/answers`)
+      .set('Authorization', userToken)
+      .send(answerData.answer);
+    res.body.should.have.property('message').equal('Answer posted successfully');
+    res.body.should.have.property('status').equal(201);
+    res.body.should.have.property('data');
+    res.body.should.have.property('success').equal(true);
+  });
+
+  it('should return an error for missing body', async () => {
+    const res = await request
+      .post(`${url1}/${questionId}/answers`)
+      .set('Authorization', userToken)
+      .send(answerData.answerWithMissingBody);
+    res.body.should.have.property('message').equal('Bad request');
+    res.body.should.have.property('status').equal(400);
+    res.body.should.have.property('data');
+    res.body.data[0].should.equal('body is required');
+    res.body.should.have.property('success').equal(false);
+  });
+
+  it('should return an error for empty body', async () => {
+    const res = await request
+      .post(`${url1}/${questionId}/answers`)
+      .set('Authorization', userToken)
+      .send(answerData.answerWithEmptyBody);
+    res.body.should.have.property('message').equal('Bad request');
+    res.body.should.have.property('status').equal(400);
+    res.body.should.have.property('data');
+    res.body.data[0].should.equal('body is not allowed to be empty');
+    res.body.data[1].should.equal('body length must be at least 3 characters long');
+    res.body.should.have.property('success').equal(false);
+  });
+
+  it('should return an error for least body', async () => {
+    const res = await request
+      .post(`${url1}/${questionId}/answers`)
+      .set('Authorization', userToken)
+      .send(answerData.answerWithLeastBody);
+    res.body.should.have.property('message').equal('Bad request');
+    res.body.should.have.property('status').equal(400);
+    res.body.should.have.property('data');
+    res.body.data[0].should.equal('body length must be at least 3 characters long');
+    res.body.should.have.property('success').equal(false);
   });
 });

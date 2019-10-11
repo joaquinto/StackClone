@@ -9,18 +9,58 @@ chai.should();
 chai.use(chaiHttp);
 
 const url = '/api/v1/auth';
+const url1 = '/api/v1/users';
 
+describe('GET ALL USERS ONE', () => {
+  let request;
+  beforeEach(async () => {
+    request = await chai.request(app);
+  });
+
+  it('should return all users', async () => {
+    const res = await request.get(`${url1}`);
+    res.body.should.have.property('message').equal('Users retrieved successfully');
+    res.body.should.have.property('data');
+    res.body.should.have.property('success').equal(true);
+    res.body.should.have.property('status').equal(200);
+  });
+
+  it('should return error 404', async () => {
+    const res = await request.get(`${url1}/m`);
+    res.body.should.have.property('message').equal('Page not found');
+    res.body.should.have.property('data');
+    res.body.should.have.property('success').equal(false);
+    res.body.should.have.property('status').equal(404);
+  });
+});
+
+describe('Get ANSWERS ONE', () => {
+  let request;
+  beforeEach(async () => {
+    request = await chai.request(app);
+  });
+
+  it('should return question object', async () => {
+    const res = await request
+      .get('/api/v1/answers');
+    res.body.should.have.property('message').equal('Answers not found');
+    res.body.should.have.property('status').equal(404);
+    res.body.should.have.property('data');
+    res.body.should.have.property('success').equal(false);
+  });
+});
 describe('USER SIGNUP', () => {
   let request;
   before(async () => {
-    const res = await chai.request(app)
+    await chai.request(app)
       .post(`${url}/signup`)
       .send({
         displayName: 'johnwheal1',
         email: 'johnwheal1@gmail.com',
         password: 'johnwheal1',
       });
-  })
+  });
+
   beforeEach(async () => {
     request = await chai.request(app);
   });
