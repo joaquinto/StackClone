@@ -37,9 +37,6 @@ export const createQuestion = async (newQuestion) => {
 export const upVoteQuestion = async (id) => {
   try {
     const question = await voteQuestion(Question, id, 'upvote');
-    // const question = await Question
-    //   .findOneAndUpdate({ _id: id }, { $inc: { votes: 1 } }, { new: true });
-    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>', question);
     return question;
   } catch (error) {
     return new Error(error);
@@ -49,9 +46,6 @@ export const upVoteQuestion = async (id) => {
 export const downVoteQuestion = async (id) => {
   try {
     const question = await voteQuestion(Question, id, 'downvote');
-    // const question = await Question
-    //   .findOneAndUpdate({ _id: id }, { $inc: { votes: -1 } }, { new: true });
-    console.log('<<<<<<<<<<<<<<<<<<<<<<<', question);
     return question;
   } catch (error) {
     return new Error(error);

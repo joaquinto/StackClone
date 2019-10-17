@@ -17,3 +17,12 @@ export const voteQuestion = async (model, id, condition) => {
     return new Error(error);
   }
 };
+
+export const clearDb = async (model) => {
+  try {
+    console.log('Data deleting ...');
+    return await model.deleteMany({});
+  } catch (error) {
+    return new Error(error);
+  }
+};

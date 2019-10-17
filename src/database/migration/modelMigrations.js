@@ -2,6 +2,7 @@ import log from 'fancy-log';
 import User from '../../models/user';
 import Question from '../../models/questions';
 import Answer from '../../models/answers';
+import { clearDb } from '../../helpers/userHelpers';
 import client from '../../helpers/redis';
 import userData from '../seeders/userSeeder';
 
@@ -12,25 +13,15 @@ export const flushRedis = async () => {
   });
 };
 
-export const clearUsers = async () => {
-  await User.deleteMany({}, (error) => {
-    if (error) throw new Error(error);
-    log('User data has been deleted');
-  });
-};
-
-export const clearQuestions = async () => {
-  await Question.deleteMany({}, (error) => {
-    if (error) throw new Error(error);
-    log('Question data has been deleted');
-  });
-};
-
-export const clearAnswers = async () => {
-  await Answer.deleteMany({}, (error) => {
-    if (error) throw new Error(error);
-    log('Answer data has been deleted');
-  });
+export const clearDatabase = async () => {
+  try {
+    await clearDb(User);
+    await clearDb(Question);
+    await clearDb(Answer);
+    return null;
+  } catch (error) {
+    return new Error(error);
+  }
 };
 
 export const seedUsers = async () => {
