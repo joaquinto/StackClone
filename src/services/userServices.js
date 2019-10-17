@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import User from '../models/user';
 import { eventEmitter } from '../helpers/notificationHandler';
+import { addToSet } from '../helpers/userHelpers';
 import filterQuery from '../helpers/filterQuery';
 import client from '../helpers/redis';
 
@@ -35,9 +36,7 @@ export const createUser = async (newUser) => {
 
 export const addUserQuestion = async (userId, payload) => {
   try {
-    const user = await findUser({ _id: userId });
-    user.questions.addToSet(payload);
-    user.save();
+    const user = await addToSet(User, userId, 'questions', payload);
     return user;
   } catch (error) {
     return new Error(error);
@@ -46,9 +45,7 @@ export const addUserQuestion = async (userId, payload) => {
 
 export const addUserAnswer = async (userId, payload) => {
   try {
-    const user = await findUser({ _id: userId });
-    user.answers.addToSet(payload);
-    user.save();
+    const user = await addToSet(User, userId, 'answers', payload);
     return user;
   } catch (error) {
     return new Error(error);

@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import Question from '../models/questions';
+import { addToSet, voteQuestion } from '../helpers/userHelpers';
 import { findAllAnswers } from './answerServices';
 import filterQuery from '../helpers/filterQuery';
 import client from '../helpers/redis';
@@ -35,8 +36,10 @@ export const createQuestion = async (newQuestion) => {
 
 export const upVoteQuestion = async (id) => {
   try {
-    const question = await Question
-      .findOneAndUpdate({ _id: id }, { $inc: { votes: 1 } }, { new: true });
+    const question = await voteQuestion(Question, id, 'upvote');
+    // const question = await Question
+    //   .findOneAndUpdate({ _id: id }, { $inc: { votes: 1 } }, { new: true });
+    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>', question);
     return question;
   } catch (error) {
     return new Error(error);
@@ -45,8 +48,10 @@ export const upVoteQuestion = async (id) => {
 
 export const downVoteQuestion = async (id) => {
   try {
-    const question = await Question
-      .findOneAndUpdate({ _id: id }, { $inc: { votes: -1 } }, { new: true });
+    const question = await voteQuestion(Question, id, 'downvote');
+    // const question = await Question
+    //   .findOneAndUpdate({ _id: id }, { $inc: { votes: -1 } }, { new: true });
+    console.log('<<<<<<<<<<<<<<<<<<<<<<<', question);
     return question;
   } catch (error) {
     return new Error(error);
@@ -55,9 +60,7 @@ export const downVoteQuestion = async (id) => {
 
 export const addQuestionAnswer = async (questionId, payload) => {
   try {
-    const question = await findQuestion({ _id: questionId });
-    question.answers.addToSet(payload);
-    question.save();
+    const question = await addToSet(Question, questionId, 'answers', payload);
     return question;
   } catch (error) {
     return new Error(error);

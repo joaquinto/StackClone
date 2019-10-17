@@ -1,7 +1,7 @@
 # StackClone
 [![Build Status](https://travis-ci.org/joaquinto/StackClone.svg?branch=develop)](https://travis-ci.org/joaquinto/StackClone)  [![Maintainability](https://api.codeclimate.com/v1/badges/5ac621725750ea8b9f24/maintainability)](https://codeclimate.com/github/joaquinto/StackClone/maintainability)  [![Test Coverage](https://api.codeclimate.com/v1/badges/5ac621725750ea8b9f24/test_coverage)](https://codeclimate.com/github/joaquinto/StackClone/test_coverage) [![Coverage Status](https://coveralls.io/repos/github/joaquinto/StackClone/badge.svg?branch=develop)](https://coveralls.io/github/joaquinto/StackClone?branch=develop)
 
-
+StackClone is a stackoverflow clone project.
 ___
 
 **Features Implemented**
@@ -24,24 +24,26 @@ ___
 
 * You should have [Node.js](https://nodejs.org/en/) installed on your local machine.
 * You should have [MongoDB](https://www.mongodb.com/download-center/enterprise) installed on your local machine.
-* You should have [Git](https://git-scm.com/downloads) installed on your machine to clone the project
+* You should have [Git](https://git-scm.com/downloads) installed on your machine to clone the project.
+* You should have [Redis](https://redis.io/download) installed on your local machine for this application to function as expected.
 * You also need to create a `.env` file in the project root folder.
 
 ### Note
-After creating the `.env` file, add a secret key and postgresql database of your choosing.
+After creating the `.env` file, add a secret key, port, salt round, redis and mongoDB database of your choosing.
 
 ```
 PORT = 5000
 SECRET_KEY = XXXXXXXXXX
 SALT_ROUND = XXXXXXX
-DATABASE_URL = XXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+MONGODB_URI = XXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+REDIS_URL = XXXXXXXXXXXXXXXX
 ```
 ___
 
 ## API Documentation
 
 The official API documentation for this project can be located here  
-[Stack-Clone API Documentation](https://stack-clone.herokuapp.com/api-docs)
+[StackClone API Documentation](https://stack-clone.herokuapp.com/api-docs)
 ___
 
 
@@ -63,7 +65,7 @@ ___
 
 
 ## API Information
-The API endpoints are hosted on Heroku - [Stack-Clone](https://stack-clone.herokuapp.com/)
+The API endpoints are hosted on Heroku - [StackClone](https://stack-clone.herokuapp.com/)
 
 |METHOD  |DESCRIPTION                        |ENDPOINT                                  |
 |------- |-----------------------------------|------------------------------------------|
@@ -97,7 +99,7 @@ You will need to have [POSTMAN](https://www.getpostman.com/downloads/) app insta
 ###### Sign In
 1. Launch POSTMAN
 2. Click the dropdown menu to the left of the URL bar and select POST as a method.
-3. To access the Sign In endpoint, at the end of WAY-FARER's URL attach the sign in endpoint to it as seen in step 4
+3. To access the Sign In endpoint, at the end of StackClone's URL attach the sign in endpoint to it as seen in step 4
 4. https://stack-clone.herokuapp.com/api/v1/auth/signin
 5. Then paste the full URL in the URL bar.
 6. Click 'Body' tab below the URL, then select x-www-form-urlencoded radio button.
@@ -110,9 +112,9 @@ You will need to have [POSTMAN](https://www.getpostman.com/downloads/) app insta
 
 1. On the terminal of your computer, navigate into the cloned repo's folder
 2. Click [npm](https://www.npmjs.com/get-npm) and [Node.js](https://nodejs.org/en/) to get npm and node respectively.
-3. Clone WAY-FARER repo `https://github.com/joaquinto/StackClone.git` on your local machine.
-4. Run `$ npm install` to install All of Way-Farer's dependencies.
-5. Run `$ npm start` to power up the server.
+3. Clone StackClone repo `https://github.com/joaquinto/StackClone.git` on your local machine.
+4. Run `$ npm install` to install All of StackClone's dependencies.
+5. Run `$ npm run start:dev` to power up the server.
 6. The procedure for using POSTMAN here is the same as when accessing the endpoint remotely except that you make use of http://localhost:5000 as the full URL's prefix in place of the app's URL on heroku
 e.g To access Sign In endpoint you will have a full URL like http://localhost:5000/api/v1/auth/signin
 
